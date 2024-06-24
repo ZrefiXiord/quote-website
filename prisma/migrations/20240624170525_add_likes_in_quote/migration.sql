@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "Quote" ADD COLUMN     "dislikesNumber" INTEGER NOT NULL DEFAULT 0,
+ADD COLUMN     "likesNumber" INTEGER NOT NULL DEFAULT 0;
