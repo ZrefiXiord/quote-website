@@ -10,7 +10,7 @@ interface QuoteProps {
 
 export default function Quote(props: QuoteProps) {
   return (
-    <li className="flex flex-row justify-between shadow-md bg-slate-50 border-2 rounded-xl py-4 px-6 m-8">
+    <li className="flex flex-row justify-between shadow-md bg-slate-50 border-2 border-gray-400 rounded-xl py-4 px-6 m-8">
       <div>
         <p className="text-5xl font-semibold">{props.quote}</p>
         <p className="text-lg text-gray-600">{props.authorName}</p>

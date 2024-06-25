@@ -10,6 +10,7 @@ export async function GET(req: NextRequest) {
             dislikesNumber: true,
             content: true,
             author: true,
+            id: true,
             reporter: {
                 select: {
                     username: true,
