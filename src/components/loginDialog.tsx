@@ -27,17 +27,42 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 const formSchema = z.object({
-  username: z.string().min(2).max(50),
-  password: z.string().min(6).max(50),
+  username: z
+    .string()
+    .min(2, {
+      message: "Le nom d'utilisateur doit être au moins de 2 caractères",
+    })
+    .max(50, {
+      message: "Le nom d'utilisateur doit être au maximum de 50 caractères",
+    }),
+  password: z
+    .string()
+    .min(6, { message: "Le mot de passe doit être au moins de 6 caractères" })
+    .max(50, {
+      message: "Le mot de passe doit être au maximum de 50 caractères",
+    }),
 });
 
 export default function LoginDialog() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
+    defaultValues: {
+      username: "",
+      password: "",
+    },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    const res = await fetch("/api/auth/login", {
+      method: "POST",
+      body: JSON.stringify(values)
+    });
+    const data = await res.json();
+
+    if(res.status==200){
+      console.log(data);
+      localStorage.setItem("token", data.message);
+    }
   }
   return (
     <Dialog>
@@ -50,31 +75,37 @@ export default function LoginDialog() {
         <DialogHeader>
           <DialogTitle>Se connecter</DialogTitle>
         </DialogHeader>
-        {/* <Form {...form}>
+        <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
             <FormField
               control={form.control}
               name="username"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Username</FormLabel>
+                  <FormLabel>Nom d&apos;utilisateur</FormLabel>
                   <FormControl>
-                    <Input placeholder="shadcn" {...field} />
+                    <Input placeholder="elon musk" {...field} />
                   </FormControl>
-                  <FormDescription>
-                    This is your public display name.
-                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
             />
-            <Button type="submit">Submit</Button>
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Mot de passe</FormLabel>
+                  <FormControl>
+                    <Input placeholder="" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <Button type="submit">Connexion</Button>
           </form>
-        </Form> */}
-
-        <DialogFooter>
-          <Button type="submit">Connexion</Button>
-        </DialogFooter>
+        </Form>
       </DialogContent>
     </Dialog>
   );
